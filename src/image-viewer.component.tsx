@@ -493,18 +493,6 @@ export default class ImageViewer extends React.Component<Props, State> {
       );
 
       switch (imageInfo.status) {
-        case 'success':
-          if (!image.props) {
-            image.props = {};
-          }
-          image.props.onLoad = () => {
-            const imageSizes = [...this.state.imageSizes!];
-            imageSizes[index].status = 'loadSuccess';
-            this.setState({ imageSizes });
-          };
-          if (this.props.enablePreload) {
-            this.preloadImage(this.state.currentShowIndex || 0);
-          }
         case 'loading':
           return (
             <Wrapper
@@ -519,6 +507,7 @@ export default class ImageViewer extends React.Component<Props, State> {
               <View style={this.styles.loadingContainer}>{this!.props!.loadingRender!()}</View>
             </Wrapper>
           );
+        case 'success':
         case 'loadSuccess':
           if (!image.props) {
             image.props = {};
@@ -549,6 +538,9 @@ export default class ImageViewer extends React.Component<Props, State> {
               ...image.props.source
             };
           }
+          if (this.props.enablePreload) {
+            this.preloadImage(this.state.currentShowIndex || 0);
+          }
           return (
             <ImageZoom
               key={index}
@@ -575,6 +567,17 @@ export default class ImageViewer extends React.Component<Props, State> {
               maxScale={this.props.maxScale}
             >
               {this!.props!.renderImage!(image.props)}
+              {imageInfo.status === 'success' ? (
+                <View
+                  style={[
+                    this.styles.loadingContainer,
+                    this.styles.modalContainer,
+                    { position: 'absolute', width: screenWidth, height: screenHeight }
+                  ]}
+                >
+                  {this!.props!.loadingRender!()}
+                </View>
+              ) : null}
             </ImageZoom>
           );
         case 'fail':
