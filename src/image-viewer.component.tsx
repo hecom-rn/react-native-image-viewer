@@ -502,6 +502,9 @@ export default class ImageViewer extends React.Component<Props, State> {
             imageSizes[index].status = 'loadSuccess';
             this.setState({ imageSizes });
           };
+          if (this.props.enablePreload) {
+            this.preloadImage(this.state.currentShowIndex || 0);
+          }
         case 'loading':
           return (
             <Wrapper
@@ -545,9 +548,6 @@ export default class ImageViewer extends React.Component<Props, State> {
               uri: image.url,
               ...image.props.source
             };
-          }
-          if (this.props.enablePreload) {
-            this.preloadImage(this.state.currentShowIndex || 0);
           }
           return (
             <ImageZoom
