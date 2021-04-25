@@ -493,6 +493,15 @@ export default class ImageViewer extends React.Component<Props, State> {
       );
 
       switch (imageInfo.status) {
+        case 'success':
+          if (!image.props) {
+            image.props = {};
+          }
+          image.props.onLoad = () => {
+            const imageSizes = [...this.state.imageSizes!];
+            imageSizes[index].status = 'loadSuccess';
+            this.setState({ imageSizes });
+          };
         case 'loading':
           return (
             <Wrapper
@@ -507,7 +516,6 @@ export default class ImageViewer extends React.Component<Props, State> {
               <View style={this.styles.loadingContainer}>{this!.props!.loadingRender!()}</View>
             </Wrapper>
           );
-        case 'success':
         case 'loadSuccess':
           if (!image.props) {
             image.props = {};
@@ -567,20 +575,6 @@ export default class ImageViewer extends React.Component<Props, State> {
               maxScale={this.props.maxScale}
             >
               {this!.props!.renderImage!(image.props)}
-              {imageInfo.status === 'success' ? (
-                <Wrapper
-                  key={index}
-                  style={{
-                    ...this.styles.modalContainer,
-                    ...this.styles.loadingContainer,
-                    position: 'absolute'
-                  }}
-                  imageWidth={screenWidth}
-                  imageHeight={screenHeight}
-                >
-                  <View style={this.styles.loadingContainer}>{this!.props!.loadingRender!()}</View>
-                </Wrapper>
-              ) : null}
             </ImageZoom>
           );
         case 'fail':
