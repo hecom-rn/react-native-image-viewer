@@ -566,18 +566,19 @@ export default class ImageViewer extends React.Component<Props, State> {
               minScale={this.props.minScale}
               maxScale={this.props.maxScale}
             >
-              {this!.props!.renderImage!(image.props)}
               {imageInfo.status === 'success' ? (
-                <View
-                  style={[
-                    this.styles.loadingContainer,
-                    this.styles.modalContainer,
-                    { position: 'absolute', width: '100%', height: '100%' }
-                  ]}
+                 <Wrapper
+                  key={index}
+                  style={{
+                    ...this.styles.modalContainer,
+                    ...this.styles.loadingContainer
+                  }}
+                  imageWidth={screenWidth}
+                  imageHeight={screenHeight}
                 >
-                  {this!.props!.loadingRender!()}
-                </View>
-              ) : null}
+                  <View style={this.styles.loadingContainer}>{this!.props!.loadingRender!()}</View>
+                </Wrapper>
+              ) : this!.props!.renderImage!(image.props)}
             </ImageZoom>
           );
         case 'fail':
