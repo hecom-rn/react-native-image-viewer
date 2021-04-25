@@ -541,20 +541,7 @@ export default class ImageViewer extends React.Component<Props, State> {
           if (this.props.enablePreload) {
             this.preloadImage(this.state.currentShowIndex || 0);
           }
-          return imageInfo.status === 'success' ? (
-              <Wrapper
-                key={index}
-                style={{
-                  ...this.styles.modalContainer,
-                  ...this.styles.loadingContainer
-                }}
-                imageWidth={screenWidth}
-                imageHeight={screenHeight}
-              >
-                <View style={this.styles.loadingContainer}>{this!.props!.loadingRender!()}</View>
-              </Wrapper>
-            ):
-           (
+          return (
             <ImageZoom
               key={index}
               ref={el => (this.imageRefs[index] = el)}
@@ -580,8 +567,22 @@ export default class ImageViewer extends React.Component<Props, State> {
               maxScale={this.props.maxScale}
             >
               {this!.props!.renderImage!(image.props)}
+              {imageInfo.status === 'success' ? (
+                <Wrapper
+                  key={index}
+                  style={{
+                    ...this.styles.modalContainer,
+                    ...this.styles.loadingContainer,
+                    position: 'absolute'
+                  }}
+                  imageWidth={screenWidth}
+                  imageHeight={screenHeight}
+                >
+                  <View style={this.styles.loadingContainer}>{this!.props!.loadingRender!()}</View>
+                </Wrapper>
+              ) : null}
             </ImageZoom>
-          )
+          );
         case 'fail':
           return (
             <Wrapper
